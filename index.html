@@ -2,10 +2,591 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=home/home.html">
-  <title>Redirecting...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>&lt;CassandraArcilla/&gt;</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100vh;
+      overflow: hidden;
+      background: #080810;
+      font-family: 'DM Mono', monospace;
+      color: #f0e8e0;
+    }
+
+    /* ── Canvas ── */
+    #canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    /* ── Glow ── */
+    .glow {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -52%);
+      width: 800px; height: 700px;
+      background: radial-gradient(ellipse at 50% 40%,
+        rgba(123,20,34,0.2) 0%,
+        rgba(123,20,34,0.05) 45%,
+        transparent 70%
+      );
+      pointer-events: none;
+      z-index: 1;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%,100% { opacity: 0.75; transform: translate(-50%,-52%) scale(1);    }
+      50%      { opacity: 1;    transform: translate(-50%,-52%) scale(1.06); }
+    }
+
+    /* ── Corner brackets ── */
+    .cb {
+      position: fixed;
+      width: 22px; height: 22px;
+      z-index: 2;
+      opacity: 0;
+      animation: cbPop 0.4s ease forwards;
+    }
+    .cb.tl { top:20px;    left:20px;  border-top:1px solid rgba(196,32,64,0.4); border-left:1px solid rgba(196,32,64,0.4);  animation-delay:0.3s; }
+    .cb.tr { top:20px;    right:20px; border-top:1px solid rgba(196,32,64,0.4); border-right:1px solid rgba(196,32,64,0.4); animation-delay:0.45s; }
+    .cb.bl { bottom:20px; left:20px;  border-bottom:1px solid rgba(196,32,64,0.4); border-left:1px solid rgba(196,32,64,0.4);  animation-delay:0.6s; }
+    .cb.br { bottom:20px; right:20px; border-bottom:1px solid rgba(196,32,64,0.4); border-right:1px solid rgba(196,32,64,0.4); animation-delay:0.75s; }
+    @keyframes cbPop {
+      from { opacity:0; transform:scale(0.5); }
+      to   { opacity:1; transform:scale(1); }
+    }
+
+    /* ── Stage ── */
+    .stage {
+      position: relative;
+      z-index: 3;
+      width: 100%; height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      opacity: 0;
+      animation: stageIn 0.7s ease forwards 0.1s;
+    }
+    @keyframes stageIn {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── Wordmark ── */
+    .wordmark {
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      color: rgba(240,232,224,0.4);
+      margin-bottom: 2.2rem;
+      text-transform: uppercase;
+    }
+    .wordmark .bk { color: #c42040; }
+
+    /* ══════════════════════════════
+       LAPTOP
+    ══════════════════════════════ */
+    .laptop-scene {
+      position: relative;
+      width: min(540px, 88vw);
+      animation: laptopFloat 5s ease-in-out infinite;
+    }
+    @keyframes laptopFloat {
+      0%,100% { transform: translateY(0) rotateX(0deg); }
+      50%      { transform: translateY(-10px) rotateX(0deg); }
+    }
+
+    /* Lid */
+    .laptop-lid {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(160deg, #1c1c26 0%, #111118 100%);
+      border-radius: 14px 14px 0 0;
+      border: 1.5px solid rgba(123,20,34,0.5);
+      border-bottom: none;
+      padding: 10px 10px 0;
+      box-shadow:
+        0 -4px 40px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    /* Screen bezel inner */
+    .laptop-screen {
+      background: #080810;
+      border-radius: 6px 6px 0 0;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    /* macOS-style title bar */
+    .screen-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 12px;
+      background: #0a0a14;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .s-dots { display:flex; gap:5px; }
+    .s-dots span { width:9px; height:9px; border-radius:50%; }
+    .sd-r { background:#ff5f57; }
+    .sd-y { background:#febc2e; }
+    .sd-g { background:#28c840; }
+    .s-tab {
+      font-size: 9.5px;
+      color: #5a5070;
+      background: #13131e;
+      padding: 2px 9px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+      margin-left: 4px;
+    }
+    .s-run {
+      margin-left: auto;
+      font-size: 8.5px;
+      color: #28c840;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .s-run::before {
+      content:'';
+      width:5px; height:5px;
+      border-radius:50%;
+      background:#28c840;
+      animation: rPulse 1.8s ease-in-out infinite;
+    }
+    @keyframes rPulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    /* Code viewport */
+    .screen-code {
+      padding: 12px 14px 10px;
+      min-height: 178px;
+      font-size: 10.5px;
+      line-height: 1.78;
+      overflow: hidden;
+    }
+    .s-line {
+      display: flex;
+      gap: 12px;
+      white-space: pre;
+      opacity: 0;
+      transform: translateX(-5px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .s-line.on { opacity:1; transform:translateX(0); }
+    .sln { color:#27233a; min-width:14px; text-align:right; font-size:9px; padding-top:1px; flex-shrink:0; user-select:none; }
+    .sk  { color:#c678dd; }
+    .sv  { color:#e5c07b; }
+    .sp  { color:#61afef; }
+    .ss  { color:#98c379; }
+    .sb  { color:#c42040; }
+    .sc  { color:#303048; }
+    .sx  { color:#b0a8c8; }
+
+    /* Cursor */
+    .cur {
+      display:inline-block;
+      width:5.5px; height:12px;
+      background:#c42040;
+      border-radius:1px;
+      vertical-align:text-bottom;
+      animation: curBlink 0.85s step-end infinite;
+      margin-left:1px;
+    }
+    @keyframes curBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* Screen status bar */
+    .screen-foot {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 12px;
+      background: #070710;
+      border-top: 1px solid rgba(255,255,255,0.025);
+      font-size: 8.5px;
+      color: #302848;
+    }
+
+    /* Camera notch */
+    .laptop-camera {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #0f0f18;
+      border: 1px solid rgba(123,20,34,0.3);
+    }
+
+    /* Base / keyboard deck */
+    .laptop-base {
+      position: relative;
+      width: 100%;
+      height: 18px;
+      background: linear-gradient(180deg, #181820 0%, #101016 100%);
+      border: 1.5px solid rgba(123,20,34,0.4);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-radius: 0 0 8px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Keyboard hint rows */
+    .laptop-base::before {
+      content: '';
+      position: absolute;
+      top: 5px; left: 12%; right: 12%;
+      height: 2px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 1px;
+    }
+    /* Touchpad */
+    .laptop-base::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      width: 60px; height: 10px;
+      background: rgba(255,255,255,0.025);
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    /* Bottom stand shadow */
+    .laptop-shadow {
+      width: 85%;
+      height: 10px;
+      margin: 0 auto;
+      background: radial-gradient(ellipse at 50% 0%,
+        rgba(123,20,34,0.25) 0%,
+        transparent 75%
+      );
+      border-radius: 50%;
+      filter: blur(6px);
+    }
+
+    /* Floating skill chips around laptop */
+    .chip {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      background: rgba(8,8,18,0.9);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 100px;
+      font-size: 9.5px;
+      font-weight: 500;
+      color: #d8d0e8;
+      letter-spacing: 0.04em;
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .chip-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .chip-vue   { top: 14%;  left: -14%;  animation: cf 4s ease-in-out infinite; }
+    .chip-figma { top: 18%;  right: -13%; animation: cf 4s ease-in-out infinite 0.9s; }
+    .chip-ux    { bottom: 28%; left: -13%; animation: cf 4s ease-in-out infinite 1.6s; }
+    .chip-js    { bottom: 22%; right:-12%; animation: cf 4s ease-in-out infinite 2.2s; }
+    @keyframes cf {
+      0%,100% { transform:translateY(0); }
+      50%      { transform:translateY(-8px); }
+    }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      margin-top: 1.8rem;
+      width: min(540px, 88vw);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .progress-track {
+      width: 100%;
+      height: 2px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 2px;
+      overflow: visible;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7b1422, #c42040 60%, #e04060);
+      border-radius: 2px;
+      transition: width 0.1s linear;
+      position: relative;
+    }
+    .progress-fill::after {
+      content:'';
+      position:absolute;
+      right:-1px; top:50%;
+      transform:translateY(-50%);
+      width:7px; height:7px;
+      border-radius:50%;
+      background:#e04060;
+      box-shadow: 0 0 10px 3px rgba(224,64,96,0.65);
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #3a3252;
+    }
+    .progress-meta .pct { color: #c42040; }
+
+    /* ── Wipe out ── */
+    .wipe {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #080810;
+      transform: translateY(100%);
+      pointer-events: none;
+    }
+    .wipe.go {
+      animation: wipeUp 0.6s cubic-bezier(0.76,0,0.24,1) forwards;
+    }
+    @keyframes wipeUp {
+      from { transform:translateY(100%); }
+      to   { transform:translateY(0); }
+    }
+  </style>
 </head>
 <body>
-  <p>If you are not redirected, <a href="home/home.html">click here</a>.</p>
+
+  <canvas id="canvas"></canvas>
+  <div class="glow"></div>
+
+  <div class="cb tl"></div>
+  <div class="cb tr"></div>
+  <div class="cb bl"></div>
+  <div class="cb br"></div>
+
+  <div class="wipe" id="wipe"></div>
+
+  <div class="stage">
+
+    <div class="wordmark">
+      <span class="bk">&lt;</span>CassandraArcilla<span class="bk">/&gt;</span>
+    </div>
+
+    <!-- ── LAPTOP ── -->
+    <div class="laptop-scene">
+
+      <!-- Floating chips -->
+      <div class="chip chip-vue">
+        <span class="chip-dot" style="background:#42b883"></span>Vue.js
+      </div>
+      <div class="chip chip-figma">
+        <span class="chip-dot" style="background:#a259ff"></span>Figma
+      </div>
+      <div class="chip chip-ux">
+        <span class="chip-dot" style="background:#c42040"></span>UI/UX
+      </div>
+      <div class="chip chip-js">
+        <span class="chip-dot" style="background:#f0de1e"></span>JS ES6+
+      </div>
+
+      <!-- Lid -->
+      <div class="laptop-lid">
+        <div class="laptop-camera"></div>
+        <div class="laptop-screen">
+
+          <!-- macOS bar -->
+          <div class="screen-bar">
+            <div class="s-dots">
+              <span class="sd-r"></span>
+              <span class="sd-y"></span>
+              <span class="sd-g"></span>
+            </div>
+            <span class="s-tab">cassandra.config.js</span>
+            <span class="s-run">running</span>
+          </div>
+
+          <!-- Code lines container -->
+          <div class="screen-code" id="screenCode"></div>
+
+          <!-- Status bar -->
+          <div class="screen-foot">
+            <span>JavaScript · UTF-8</span>
+            <span id="screenFootR">Ln 1, Col 1</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Base -->
+      <div class="laptop-base"></div>
+      <div class="laptop-shadow"></div>
+
+    </div><!-- /laptop-scene -->
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" id="pFill"></div>
+      </div>
+      <div class="progress-meta">
+        <span id="pLabel">Initializing</span>
+        <span class="pct" id="pPct">0%</span>
+      </div>
+    </div>
+
+  </div><!-- /stage -->
+
+  <script>
+  /* ═══════════════════════
+     PARTICLES
+  ═══════════════════════ */
+  (function(){
+    const c   = document.getElementById('canvas');
+    const ctx = c.getContext('2d');
+    let W, H, pts = [];
+
+    function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const rand = (a,b) => a + Math.random()*(b-a);
+    for(let i=0;i<80;i++) pts.push({
+      x:rand(0,W), y:rand(0,H),
+      vx:rand(-0.15,0.15), vy:rand(-0.22,0),
+      r:rand(0.5,2), a:rand(0.08,0.5), va:rand(0.003,0.008),
+      maroon: Math.random()<0.28
+    });
+
+    (function frame(){
+      ctx.clearRect(0,0,W,H);
+      pts.forEach(p=>{
+        p.x+=p.vx; p.y+=p.vy; p.a+=p.va;
+        if(p.a>0.5||p.a<0.04) p.va*=-1;
+        if(p.y<-8){p.y=H+8;p.x=rand(0,W);}
+        if(p.x<-8) p.x=W+8;
+        if(p.x>W+8) p.x=-8;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle = p.maroon
+          ? `rgba(196,32,64,${p.a})`
+          : `rgba(160,140,190,${p.a*0.45})`;
+        ctx.fill();
+      });
+      for(let i=0;i<pts.length;i++){
+        for(let j=i+1;j<pts.length;j++){
+          const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y;
+          const d=Math.sqrt(dx*dx+dy*dy);
+          if(d<85){
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x,pts[i].y);
+            ctx.lineTo(pts[j].x,pts[j].y);
+            ctx.strokeStyle=`rgba(123,20,34,${0.11*(1-d/85)})`;
+            ctx.lineWidth=0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(frame);
+    })();
+  })();
+
+  /* ═══════════════════════
+     TYPEWRITER ON SCREEN
+  ═══════════════════════ */
+  const lines = [
+    { n:'1',  h:'<span class="sc">// cassandra.config.js</span>' },
+    { n:'2',  h:'' },
+    { n:'3',  h:'<span class="sk">const </span><span class="sv">cassandra</span><span class="sx"> = {</span>' },
+    { n:'4',  h:'  <span class="sp">role</span><span class="sx">:      </span><span class="ss">"UI/UX Designer"</span><span class="sx">,</span>' },
+    { n:'5',  h:'  <span class="sp">focus</span><span class="sx">:     </span><span class="ss">"Frontend Dev"</span><span class="sx">,</span>' },
+    { n:'6',  h:'  <span class="sp">location</span><span class="sx">:  </span><span class="ss">"Angeles City, PH"</span><span class="sx">,</span>' },
+    { n:'7',  h:'  <span class="sp">stack</span><span class="sx">:     [</span>' },
+    { n:'8',  h:'    <span class="ss">"Vue.js"</span><span class="sx">, </span><span class="ss">"Figma"</span><span class="sx">, </span><span class="ss">"CSS3"</span><span class="sx">,</span>' },
+    { n:'9',  h:'    <span class="ss">"JavaScript"</span><span class="sx">, </span><span class="ss">"Bootstrap"</span>' },
+    { n:'10', h:'  <span class="sx">],</span>' },
+    { n:'11', h:'  <span class="sp">openToWork</span><span class="sx">: </span><span class="sb">true</span><span class="sx">,</span>' },
+    { n:'12', h:'<span class="sx">};</span>' },
+    { n:'13', h:'' },
+    { n:'14', h:'<span class="sk">export default </span><span class="sv">cassandra</span><span class="sx">;</span>' },
+  ];
+
+  const screenCode = document.getElementById('screenCode');
+  const screenFR   = document.getElementById('screenFootR');
+  const pFill      = document.getElementById('pFill');
+  const pLabel     = document.getElementById('pLabel');
+  const pPct       = document.getElementById('pPct');
+  const wipe       = document.getElementById('wipe');
+
+  const labels = ['Initializing','Loading assets','Building UI','Almost ready','Launching'];
+  let cursorEl = null;
+
+  function placeCursor(codeSpan) {
+    if(cursorEl) cursorEl.remove();
+    cursorEl = document.createElement('span');
+    cursorEl.className = 'cur';
+    codeSpan.appendChild(cursorEl);
+  }
+
+  function revealLine(i) {
+    return new Promise(res => {
+      const l = lines[i];
+      const row = document.createElement('div');
+      row.className = 's-line';
+      row.innerHTML = `<span class="sln">${l.n}</span><span class="sct">${l.h}</span>`;
+      screenCode.appendChild(row);
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        row.classList.add('on');
+        screenFR.textContent = `Ln ${l.n}, Col 1`;
+        placeCursor(row.querySelector('.sct'));
+        res();
+      }));
+    });
+  }
+
+  async function run() {
+    const delay = ms => new Promise(r => setTimeout(r, ms));
+    const total = lines.length;
+
+    await delay(420);
+
+    for(let i=0;i<total;i++){
+      await revealLine(i);
+
+      const pct = Math.round(((i+1)/total)*100);
+      pFill.style.width = pct + '%';
+      pPct.textContent  = pct + '%';
+      const li = Math.min(Math.floor((pct/100)*labels.length), labels.length-1);
+      pLabel.textContent = labels[li];
+
+      const pause = (i===2||i===6||i===10||i===11) ? 200 : 100;
+      await delay(pause);
+    }
+
+    if(cursorEl) cursorEl.remove();
+    pLabel.textContent = 'Ready ✓';
+    pPct.textContent   = '100%';
+
+    await delay(350);
+
+    // Wipe up then redirect
+    wipe.classList.add('go');
+    setTimeout(() => { window.location.href = 'home/home.html'; }, 620);
+  }
+
+  run();
+  </script>
 </body>
 </html>
