@@ -7,7 +7,7 @@ window.projectsData = {
     subtitle: 'Full-stack Web Application · Group Project',
     label:    'Barangay System',
     gradient: 'linear-gradient(135deg,#0d1a2e,#1a3a5c)',
-    roleTag:  'Group Leader · Backend Dev',
+    roleTag:  'Group Leader · Frontend Dev',
     roleColor: '#3b82f6',
     slides: [
       { label: 'Landing Page',   img: 'images/barangay-information-system/landing-page.jpg' },
@@ -21,14 +21,14 @@ window.projectsData = {
       { label: 'My Account',     img: 'images/barangay-information-system/my-account.jpg' },
     ],
     desc: 'A full-stack web application for managing barangay services and resident information. Residents can register, log in, and request barangay services online, while officials manage records through a secure admin dashboard. Built to modernize local government operations and improve community accessibility.',
-    role: 'Group Leader & Backend Developer',
+    role: 'Group Leader & Frontend Developer',
     contributions: [
       'Led the team, coordinated task assignments, and managed project milestones from planning to deployment',
-      'Architected and built the full REST API using Node.js and Express, handling all server-side logic',
-      'Designed and implemented the MongoDB database schema for residents, services, and announcements',
-      'Built secure authentication and role-based access control (resident vs. admin)',
-      'Integrated backend API with the Vue 3 frontend developed by the team',
-      'Conducted code reviews and resolved merge conflicts across the group repository',
+      'Collaborated on system architecture and supported integration of backend REST API built with Node.js and Express',
+      'Designed and implemented responsive frontend interfaces using Vue 3 for residents, services, and announcements modules',
+      'Integrated frontend with backend APIs, handling data fetching, state management, and UI updates',
+      'Implemented role-based UI behavior for residents and admins based on authentication responses',
+      'Conducted code reviews, coordinated with backend developers, and resolved merge conflicts across the group repository'
     ],
     features: [
       'Resident registration and login system',
