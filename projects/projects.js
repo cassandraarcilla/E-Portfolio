@@ -194,6 +194,105 @@ window.projectsData = {
     codeUrl: null,
   },
 
+  eltipayroll: {
+    title:    "ELTI Attendance and Payroll System – Super Admin Redesign",
+    subtitle: 'Internship Project · ELTI Group Inc.',
+    label:    "ELTI Payroll",
+    gradient: 'linear-gradient(135deg,#2a0a10,#7b1422)',
+    roleTag:  "Intern · Super Admin Redesign",
+    roleColor: '#e0566e',
+    slides: [
+      { label: "Super Admin Dashboard", img: 'images/elti-payroll/dashboard.jpg' },
+    ],
+    desc: "Worked on redesigning and enhancing the Super Admin interface of the ELTI Attendance and Payroll System, focusing on improving system usability, administrative controls, navigation, and employee management workflows.",
+    role: 'Web and System Development Intern – ELTI Group',
+    contributions: [
+      "Redesigned and enhanced the Super Admin dashboard and user interface.",
+      "Improved employee management and monitoring functionalities.",
+      "Enhanced department and position management.",
+      "Improved leave credits management and employee records.",
+      "Enhanced employee request management, including Attendance, Leave, Overtime, Undertime, Change Off, Change Schedule, and Late requests.",
+      "Improved weekly scheduling functionalities and double-shift management.",
+      "Enhanced employee search, filtering, and data presentation.",
+      "Improved report generation and data export functionalities.",
+      "Conducted functionality checks, debugging, and interface improvements.",
+    ],
+    features: [],
+    tech: ["PHP", "JavaScript", "HTML5", "CSS3", "Bootstrap", "UI/UX Design", "Web Development", "System Enhancement", "Database Management", "Software Testing"],
+    liveUrl: 'https://eltiattendance.com/public/login.php',
+    codeUrl: null,
+  },
+
+  maintenance: {
+    title:    "Maintenance Management System",
+    subtitle: 'Internship Project · ELTI Group Inc.',
+    label:    "Maintenance System",
+    gradient: 'linear-gradient(135deg,#0a1e1a,#10504a)',
+    roleTag:  "Intern · Collaborative Development",
+    roleColor: '#14b8a6',
+    slides: [
+      { label: "Login", img: 'images/maintenance-system/overview.jpg' },
+      { label: "Admin View", img: 'images/maintenance-system/admin.jpg' },
+      { label: "Maintenance View", img: 'images/maintenance-system/maintenance.jpg' },
+      { label: "Staff View", img: 'images/maintenance-system/staff.jpg' },
+    ],
+    desc: "Collaborated with another intern in developing and enhancing a web-based Maintenance Management System designed to streamline maintenance operations, task assignments, employee coordination, expense monitoring, and reporting. The system provides different functionalities for Staff, Maintenance, Admin, and Super Admin users to support efficient maintenance request handling and workflow management.",
+    role: 'Web and System Development Intern – ELTI Group',
+    contributions: [
+      "Collaborated in developing and enhancing the web-based Maintenance Management System.",
+      "Developed and improved user interfaces for Staff, Maintenance, Admin, and Super Admin roles.",
+      "Implemented task assignment, maintenance requests, and task monitoring functionalities.",
+      "Enhanced task acceptance, completion, and accomplishment reporting.",
+      "Developed expense tracking and monitoring functionalities.",
+      "Implemented receipt uploads and expense report management.",
+      "Enhanced maintenance reports and filtering options.",
+      "Improved notification management and unread notification indicators.",
+      "Enhanced activity logs to record system activities and changes.",
+      "Implemented administrative controls for task management, approvals, and employee monitoring.",
+      "Improved task history, editing permissions, and record management.",
+      "Enhanced responsive layouts and overall system usability across different user roles.",
+      "Conducted system testing, debugging, and functionality improvements.",
+    ],
+    features: [],
+    tech: ["PHP", "JavaScript", "HTML5", "CSS3", "Bootstrap", "MySQL", "UI/UX Design", "Web Application Development", "Responsive Web Design", "Database Management", "System Testing", "Team Collaboration"],
+    liveUrl: 'https://maintenance.eltiattendance.com/auth/login.php',
+    codeUrl: null,
+  },
+
+  reminder: {
+    title:    "Reminder System Integration – Attendance and Payroll System",
+    subtitle: 'Internship Project · ELTI Group Inc.',
+    label:    "Reminder System",
+    gradient: 'linear-gradient(135deg,#1a1a0a,#50480f)',
+    roleTag:  "Intern · System Integration",
+    roleColor: '#eab308',
+    slides: [
+      { label: "Reminders", img: 'images/reminder-system/overview.jpg' },
+      { label: "My Reminders", img: 'images/reminder-system/my-reminder.jpg' },
+      { label: "Calendar", img: 'images/reminder-system/calendar.jpg' },
+      { label: "Endorsement", img: 'images/reminder-system/endorsement.jpg' },
+      { label: "Memos", img: 'images/reminder-system/memo.jpg' },
+    ],
+    desc: "Worked on developing and integrating a Reminder System into the existing ELTI Attendance and Payroll System to improve employee communication, reminder tracking, endorsement management, and administrative monitoring. The integration provides Staff and Admin users with dedicated functionalities while allowing administrators to manage and monitor reminder-related activities.",
+    role: 'Web and System Development Intern – ELTI Group',
+    contributions: [
+      "Developed and enhanced Staff and Admin interfaces for the Reminder System.",
+      "Integrated reminder and endorsement functionalities into the existing Attendance and Payroll System.",
+      "Implemented reminder creation, updating, and management.",
+      "Enhanced endorsement management and employee reminder tracking.",
+      "Developed administrative controls for creating, editing, and deleting reminder and endorsement records.",
+      "Implemented employee monitoring and filtering functionalities.",
+      "Enhanced employee-specific monitoring and record management.",
+      "Integrated activity logs to record actions and changes involving reminders and endorsements.",
+      "Improved administrative monitoring and management workflows.",
+      "Enhanced system usability and consistency with the existing Attendance and Payroll System.",
+    ],
+    features: [],
+    tech: ["PHP", "JavaScript", "HTML5", "CSS3", "Bootstrap", "MySQL", "System Integration", "Web Development", "Database Management", "UI/UX Design", "Software Testing"],
+    liveUrl: 'https://eltiattendance.com/public/login.php',
+    codeUrl: null,
+  },
+
 };
 
 // ── Card thumbnail click → swap main image ───────────────────────
@@ -326,7 +425,7 @@ function openProjectModal(data) {
         </div>
 
         <!-- Two-column: Role + Tech -->
-        <div class="modal-two-col">
+        <div class="modal-two-col" ${techHTML ? '' : 'style="grid-template-columns:1fr;"'}>
           <div class="modal-section">
             <div class="modal-section-label">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -334,13 +433,13 @@ function openProjectModal(data) {
             </div>
             <div class="modal-role-full" style="border-left-color:${roleColor};">${data.role}</div>
           </div>
-          <div class="modal-section">
+          ${techHTML ? `<div class="modal-section">
             <div class="modal-section-label">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
               Technologies
             </div>
             <div class="modal-tech-wrap">${techHTML}</div>
-          </div>
+          </div>` : ''}
         </div>
 
         <!-- Contributions -->
@@ -353,13 +452,13 @@ function openProjectModal(data) {
         </div>
 
         <!-- Features -->
-        <div class="modal-section">
+        ${featuresHTML ? `<div class="modal-section">
           <div class="modal-section-label">
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             Key Features
           </div>
           <ul class="modal-features-list">${featuresHTML}</ul>
-        </div>
+        </div>` : ''}
 
         <!-- Actions -->
         <div class="modal-actions-row">
